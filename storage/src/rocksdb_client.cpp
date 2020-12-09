@@ -100,7 +100,7 @@ void Client::Options::applyOptimizations() {
   db_options.level0_slowdown_writes_trigger = 48;
   db_options.level0_stop_writes_trigger = 56;
   db_options.bytes_per_sync = 1024 * 2048;
-  db_options.max_open_files = 1000;
+  db_options.max_open_files = 500;
 
   ::rocksdb::BlockBasedTableOptions table_options;
 
