@@ -88,8 +88,8 @@ void Client::Options::applyOptimizations() {
   // Setting optimized rocksdb options
   db_options.enable_pipelined_write = true;
   db_options.IncreaseParallelism(background_threads);
-  db_options.write_buffer_size = 1024 * 1024 * 512;
-  db_options.max_write_buffer_number = 16;
+  db_options.write_buffer_size = 1024 * 1024 * 256;
+  db_options.max_write_buffer_number = 8;
   db_options.min_write_buffer_number_to_merge = 4;
   db_options.max_bytes_for_level_base = (uint64_t)1024 * 1024 * 2048;
   db_options.target_file_size_base = 1024 * 1024 * 256;
@@ -100,7 +100,6 @@ void Client::Options::applyOptimizations() {
   db_options.level0_slowdown_writes_trigger = 48;
   db_options.level0_stop_writes_trigger = 56;
   db_options.bytes_per_sync = 1024 * 2048;
-  db_options.max_open_files = 500;
 
   ::rocksdb::BlockBasedTableOptions table_options;
 
