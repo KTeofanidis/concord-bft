@@ -16,6 +16,8 @@
 #include <vector>
 #include <mutex>
 #include <optional>
+#include <atomic>
+#include <iostream>
 
 #include <boost/asio.hpp>
 #include <boost/asio/ssl.hpp>
@@ -29,7 +31,27 @@ namespace bft::communication {
 
 typedef boost::asio::ssl::stream<boost::asio::ip::tcp::socket> SSL_SOCKET;
 
-class AsyncTlsConnection : public std::enable_shared_from_this<AsyncTlsConnection> {
+class ObjectCount {
+  private:
+    static std::atomic<int> total;
+    static std::atomic<int> count;
+  protected:
+    ObjectCount() {
+      ++total;
+      ++count;
+      showCount();
+    }
+    ~ObjectCount() {
+      --count;
+      showCount();
+    }
+  public:
+    void static showCount() {
+        LOG_INFO(logging::getLogger("concord-bft.tls"), "AsyncTlsConnection::Instances: " << total << "/" << count);
+    }
+};
+
+class AsyncTlsConnection : public std::enable_shared_from_this<AsyncTlsConnection>, ObjectCount {
  public:
   static constexpr size_t MSG_HEADER_SIZE = 4;
   static constexpr std::chrono::seconds READ_TIMEOUT = std::chrono::seconds(10);
@@ -181,6 +203,8 @@ class AsyncTlsConnection : public std::enable_shared_from_this<AsyncTlsConnectio
   std::shared_ptr<OutgoingMsg> write_msg_;
 
   WriteQueue* write_queue_ = nullptr;
+
+  static std::atomic<std::size_t> total_conn_;
 };
 
 }  // namespace bft::communication

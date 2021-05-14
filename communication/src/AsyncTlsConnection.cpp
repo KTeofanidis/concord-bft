@@ -23,6 +23,9 @@
 
 namespace bft::communication {
 
+std::atomic<int> ObjectCount::total = ATOMIC_VAR_INIT(0);
+std::atomic<int> ObjectCount::count = ATOMIC_VAR_INIT(0);
+
 void AsyncTlsConnection::readMsgSizeHeader(std::optional<size_t> bytes_already_read) {
   LOG_DEBUG(logger_, KVLOG(peer_id_.value()));
   auto self = shared_from_this();
